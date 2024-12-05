@@ -61,7 +61,10 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
         private static string[] InitializationPromptMessages => [
             "Initializing object on Rectangle Simulation.",
             "Please provide required input: [width] [height] [startX] [startY]",
-            "Only integers are allowed and width and height cannot be zero."
+            "\twidth (integer): Defined as number of steps (coordinates) starting from 0 on the x axis",
+            "\theight (integer): Defined as number of steps (coordinates) starting from 0 on the y axis",
+            "\tstartX (integer): Defined as objects starting point on the x axis",
+            "\tstartY (integer): Defined as objects starting point on the y axis"
         ];
         private static string[] CommandPromptMessages => [
             "\nInput one ore more commands as integers. Following commands are available:",
@@ -122,19 +125,19 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
         private void Start()
         {
             State = SimulationState.Running;
-            Console.WriteLine("RectangleSimulation started");
+            Console.WriteLine("Rectangle Simulation started");
         }
 
         private void End()
         {
             State = SimulationState.Ended;
-            Console.WriteLine("RectangleSimulation Ended");
+            Console.WriteLine("Rectangle Simulation Ended");
         }
 
         private void Abort()
         {
             State = SimulationState.Aborted;
-            Console.WriteLine("RectangleSimulation Aborted");
+            Console.WriteLine("Rectangle Simulation Aborted");
         }
 
     }
