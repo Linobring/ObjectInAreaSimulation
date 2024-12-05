@@ -6,9 +6,9 @@ namespace ObjectInAreaSimulation.Classes
 {
     public class SimulationObject() : ISimulationObject
     {
-        public Coordinates Coordinates { get; set; } = new();
+        public Coordinates Coordinates { get; set; }
         public Direction Direction { get; set; }
-        public decimal StepDistance { get; set; } = 1M;
+        public decimal StepDistance { get; set; }
 
         public void MoveForward() => Move(StepDistance);
         public void MoveBackwards() => Move(-StepDistance);

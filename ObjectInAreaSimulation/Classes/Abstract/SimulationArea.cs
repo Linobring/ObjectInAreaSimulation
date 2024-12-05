@@ -8,7 +8,7 @@ namespace ObjectInAreaSimulation.Classes.Abstract
         public decimal AnchorPointX { get; set; }
         public decimal AnchorPointY { get; set; }
 
-        public abstract void Initialize(decimal[] input);
+        public abstract void Initialize(decimal[] input, decimal stepDistance);
 
         public abstract bool IsCoordinatesInside(Coordinates coordinates);
 

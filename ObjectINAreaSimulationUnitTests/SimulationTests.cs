@@ -1,7 +1,4 @@
-using ConsoleApp.Classes;
-using ConsoleApp.Enums;
-
-namespace TestProject1
+namespace ObjectInAreaSimulationUnitTests
 {
     [TestFixture]
     public class RectangleSimulationTest

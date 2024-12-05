@@ -6,6 +6,8 @@ namespace ObjectInAreaSimulation.Classes.Interfaces
     { 
         public Coordinates Coordinates { get; set; }
 
+        public decimal StepDistance { get; set; }
+
         /// <summary>
         /// Move object Forward in the direction it is facing.
         /// </summary>

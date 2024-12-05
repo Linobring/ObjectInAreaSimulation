@@ -17,8 +17,9 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
             var input = PromptForDecimalList(InitializationPromptMessages, requiredInputLength);
 
             var areaBoundaries = input.Take(2).ToArray();
-            Area.Initialize(areaBoundaries);
+            Area.Initialize(areaBoundaries, settings.StepDistance);
             SimObject.Coordinates = new Coordinates(input.Skip(2).ToArray());
+            SimObject.StepDistance = settings.StepDistance;
 
             Initiated();
         }
