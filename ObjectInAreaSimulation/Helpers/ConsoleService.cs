@@ -4,17 +4,11 @@ using ObjectInAreaSimulation.Enums;
 
 namespace ObjectInAreaSimulation.Helpers
 {
-    internal static class ConsoleHelper
+    public class ConsoleService : IConsoleService
     {
         private static readonly char[] Separators = [' ', '\t'];
 
-        /// <summary>
-        /// Prompt user for input. If the input is invalid, the user will be prompted again.
-        /// </summary>
-        /// <param name="messages"></param>
-        /// <param name="requiredLength"></param>
-        /// <returns></returns>
-        public static List<decimal> PromptForDecimalList(string[] messages, int requiredLength)
+        public List<decimal> PromptForDecimalList(string[] messages, int requiredLength)
         {
             while (true)
             {
@@ -41,20 +35,7 @@ namespace ObjectInAreaSimulation.Helpers
             }
         }
 
-        /// <summary>
-        /// prompt user for input based on message
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="exit"></param>
-        /// <returns>true if input equals input (case-insensitive) else false </returns>
-        public static bool PromptForExit(string message, string exit = "exit")
-        {
-            DisplayMessage(message);
-            var input = Console.ReadLine();
-            return !string.IsNullOrWhiteSpace(input) && input.Equals(exit, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public static void DisplayMessages(string[] messages)
+        public void DisplayMessages(string[] messages)
         {
             foreach (var message in messages)
             {
@@ -62,14 +43,14 @@ namespace ObjectInAreaSimulation.Helpers
             }
         }
 
-        public static void DisplayMessage(string message)
+        public void DisplayMessage(string message)
         {
             Console.WriteLine(message);
 
         }
 
         //TODO change name
-        public static void ReadStreamAndExecuteCommand(ISimulation simulation, bool continueOnError)
+        public void ReadStreamAndExecuteCommand(ISimulation simulation, ISimulationLogger logger, bool continueOnError)
         {
             using var inputStream = Console.OpenStandardInput();
             using var reader = new StreamReader(inputStream, Encoding.UTF8);
@@ -87,9 +68,9 @@ namespace ObjectInAreaSimulation.Helpers
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //TODO LogERROR
+                    logger.LogError(ex);
                     if (!continueOnError)
                     {
                         throw;

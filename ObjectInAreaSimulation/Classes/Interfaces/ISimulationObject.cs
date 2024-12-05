@@ -1,11 +1,13 @@
 ﻿using ObjectInAreaSimulation.Classes.Models;
+using ObjectInAreaSimulation.Enums;
 
 namespace ObjectInAreaSimulation.Classes.Interfaces
 {
-    internal interface ISimulationObject
+    public interface ISimulationObject
     { 
         public Coordinates Coordinates { get; set; }
 
+        public Direction Direction { get; set; }
         public decimal StepDistance { get; set; }
 
         /// <summary>

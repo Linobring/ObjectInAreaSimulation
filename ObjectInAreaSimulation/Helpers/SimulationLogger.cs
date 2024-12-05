@@ -1,9 +1,10 @@
 ﻿using ObjectInAreaSimulation.Classes.Interfaces;
+using ObjectInAreaSimulation.Classes.Models;
 using ObjectInAreaSimulation.Enums;
 
 namespace ObjectInAreaSimulation.Helpers
 {
-    internal class SimulationLogger(bool logCommands) : ISimulationLogger
+    public class SimulationLogger(SimulationSettings settings) : ISimulationLogger
     {
         public void Log(string message)
         {
@@ -12,17 +13,20 @@ namespace ObjectInAreaSimulation.Helpers
         
         public void LogCommand(Commands command, string message)
         {
-            if (!logCommands)
+            if (!settings.LogCommands)
             {
                 return;
             }
-            Console.WriteLine($"{command.ToString()} => {message}");
+            Console.WriteLine($"\t Command: {command.ToString()}, {message}");
         }
 
-        public void LogError(Exception ex, string message)
+        public void LogError(Exception ex, string message = "")
         {
-            Console.WriteLine($"Error: {message}");
-            Console.WriteLine($"Exception: {ex.Message}");
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                message = ex.Message;
+            }
+            Log(message);
         }
 
     }

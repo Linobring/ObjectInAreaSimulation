@@ -4,15 +4,16 @@ namespace ObjectInAreaSimulationUnitTests
     public class RectangleSimulationTest
     {
 
-        //initiate 
-        //run
+        //executeCommand
+            //0,1,2,3,4, incorrect input int, string
+            
+
+
         //displayResults
 
+        //initialize
 
         //general test for rectangle
-
-
-
 
         //[TestCase(Direction.North, Direction.East),
         // TestCase(Direction.East, Direction.South),
