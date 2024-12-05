@@ -1,27 +1,26 @@
 ﻿using ObjectInAreaSimulation.Classes.Interfaces;
 using ObjectInAreaSimulation.Classes.Models;
 using ObjectInAreaSimulation.Enums;
-using ObjectInAreaSimulation.Helpers;
+using ObjectInAreaSimulation.Services;
 
 namespace ObjectInAreaSimulation.Classes.RectangleSimulation
 {
-    internal class RectangleSimulation(SimulationSettings settings) : ISimulation
+    public class RectangleSimulation(SimulationSettings settings, IConsoleService consoleService, ISimulationLogger logger, ISimulationObject simObject, ISimulationArea area) : ISimulation
     {
+        public RectangleSimulation(SimulationSettings settings) : this(settings, new ConsoleService(), new SimulationLogger(settings), new SimulationObject(), new RectangleArea())
+        { }
+
         private SimulationState State { get; set; }
-        private ISimulationArea Area { get; set; } = new RectangleArea();
-        private ISimulationObject SimObject { get; set; } = new SimulationObject();
-        private ISimulationLogger Logger { get; set; } = new SimulationLogger(settings);
-        private IConsoleService ConsoleService { get; set; } = new ConsoleService();
 
         public void Initialize()
         {
             const int requiredInputLength = 4;
-            var input = ConsoleService.PromptForDecimalList(InitializationPromptMessages, requiredInputLength);
+            var input = consoleService.PromptForDecimalList(InitializationPromptMessages, requiredInputLength);
 
             var areaBoundaries = input.Take(2).ToArray();
-            Area.Initialize(areaBoundaries, settings.StepDistance);
-            SimObject.Coordinates = new Coordinates(input.Skip(2).ToArray());
-            SimObject.StepDistance = settings.StepDistance;
+            area.Initialize(areaBoundaries, settings.StepDistance);
+            simObject.Coordinates = new Coordinates(input.Skip(2).ToArray());
+            simObject.StepDistance = settings.StepDistance;
 
             Initiated();
         }
@@ -29,15 +28,15 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
         public void Run()
         {
             Start();
-            ConsoleService.DisplayMessages(CommandPromptMessages);
+            consoleService.DisplayMessages(CommandPromptMessages);
             try
             {
-                ConsoleService.ReadStreamAndExecuteCommand(this, Logger, settings.ContinueSimulationOnInvalidInput);
+                consoleService.ReadStreamAndExecuteCommand(this, logger, settings.ContinueSimulationOnInvalidInput);
             }
             catch (Exception ex)
             {
                 Abort();
-                ConsoleService.DisplayMessage($"An error occured: {ex.Message}");
+                logger.LogError(ex, $"An error occured: {ex.Message}");
             }
         }
 
@@ -48,15 +47,13 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
                 return;
             }
 
-            var isSuccessful = Area.IsCoordinatesInside(SimObject.Coordinates);
-            var result = isSuccessful ? "successful" : "unsuccessful";
-            var finalCoordinates = isSuccessful ?
-                SimObject.Coordinates.ToString()
-                : new Coordinates(-1, -1).ToString();
+            var result = new SimulationResult()
+            {
+                IsSuccessful = area.IsCoordinatesInside(simObject.Coordinates),
+                FinalCoordinates = simObject.Coordinates
+            };
 
-            var v = new SimulationResult();
-
-            ConsoleService.DisplayMessage($"RectangleSimulation was {result}. " + $"Final coordinates of the object are {finalCoordinates}");
+            consoleService.DisplayMessage(result.ToString());
         }
 
 
@@ -80,7 +77,6 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
             "- Invalid Commands will be ignored and the simulation will proceed to the next command"
         ];
 
-        //Execute commands
         public SimulationState ExecuteCommand(int commandInput)
         {
             var command = ValidateCommand(commandInput);
@@ -91,22 +87,22 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
                     End();
                     break;
                 case Commands.MoveForward:
-                    SimObject.MoveForward();
+                    simObject.MoveForward();
                     break;
                 case Commands.MoveBackwards:
-                    SimObject.MoveBackwards();
+                    simObject.MoveBackwards();
                     break;
                 case Commands.RotateClockwise:
-                    SimObject.Rotate();
+                    simObject.Rotate();
                     break;
                 case Commands.RotateCounterClockwise:
-                    SimObject.Rotate(clockwise: false);
+                    simObject.Rotate(clockwise: false);
                     break;
                 default:
                     throw new ArgumentException($"Invalid command: {command}");
             }
 
-            Logger.LogCommand(command, $"state: {State}, direction: {SimObject.Direction}, coordinates: {SimObject.Coordinates.ToString()}");
+            logger.LogCommand(command, $"state: {State}, direction: {simObject.Direction}, coordinates: {simObject.Coordinates.ToString()}");
             return State;
         }
         private static Commands ValidateCommand(int commandInput)
@@ -127,19 +123,19 @@ namespace ObjectInAreaSimulation.Classes.RectangleSimulation
         private void Start()
         {
             State = SimulationState.Running;
-            Console.WriteLine("Rectangle Simulation started");
+            logger.LogState(State);
         }
 
         private void End()
         {
             State = SimulationState.Ended;
-            Console.WriteLine("Rectangle Simulation Ended");
+            logger.LogState(State);
         }
 
         private void Abort()
         {
             State = SimulationState.Aborted;
-            Console.WriteLine("Rectangle Simulation Aborted");
+            logger.LogState(State);
         }
 
     }

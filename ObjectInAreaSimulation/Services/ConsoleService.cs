@@ -2,7 +2,7 @@
 using ObjectInAreaSimulation.Classes.Interfaces;
 using ObjectInAreaSimulation.Enums;
 
-namespace ObjectInAreaSimulation.Helpers
+namespace ObjectInAreaSimulation.Services
 {
     public class ConsoleService : IConsoleService
     {

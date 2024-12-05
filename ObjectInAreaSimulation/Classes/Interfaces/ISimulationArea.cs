@@ -2,7 +2,7 @@
 
 namespace ObjectInAreaSimulation.Classes.Interfaces
 {
-    internal interface ISimulationArea
+    public interface ISimulationArea
     {
         public decimal AnchorPointX { get; set; }
         public decimal AnchorPointY { get; set; }

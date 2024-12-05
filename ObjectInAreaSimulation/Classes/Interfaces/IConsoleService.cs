@@ -1,6 +1,6 @@
 ﻿namespace ObjectInAreaSimulation.Classes.Interfaces
 {
-    internal interface IConsoleService
+    public interface IConsoleService
     {
         /// <summary>
         /// Prompt user for input. If the input is invalid, the user will be prompted again.

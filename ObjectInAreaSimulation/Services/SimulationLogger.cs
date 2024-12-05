@@ -2,7 +2,7 @@
 using ObjectInAreaSimulation.Classes.Models;
 using ObjectInAreaSimulation.Enums;
 
-namespace ObjectInAreaSimulation.Helpers
+namespace ObjectInAreaSimulation.Services
 {
     public class SimulationLogger(SimulationSettings settings) : ISimulationLogger
     {
@@ -20,13 +20,26 @@ namespace ObjectInAreaSimulation.Helpers
             Console.WriteLine($"\t Command: {command.ToString()}, {message}");
         }
 
+        public void LogState(SimulationState state) {
+            if (!settings.LogSimulationState)
+            {
+                return;
+            }
+            Console.WriteLine($"\t Simulation state: {state.ToString()}");
+        }
+
+
         public void LogError(Exception ex, string message = "")
         {
             if (string.IsNullOrWhiteSpace(message))
             {
                 message = ex.Message;
             }
-            Log(message);
+
+            if (settings.LogErrors)
+            {
+                Log(message);
+            }
         }
 
     }
